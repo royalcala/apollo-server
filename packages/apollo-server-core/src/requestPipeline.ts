@@ -478,6 +478,8 @@ export async function processGraphQLRequest<TContext>(
       ? errorOrErrors
       : [errorOrErrors];
 
+    extensionStack.didEncounterErrors(errors);
+
     return sendResponse({
       errors: formatErrors(
         errors.map(err =>
