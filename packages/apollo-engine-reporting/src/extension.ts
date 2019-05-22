@@ -196,12 +196,15 @@ export class EngineReportingExtension<TContext = any>
       this.trace.fullQueryCacheHit = !!o.requestContext.metrics
         .responseCacheHit;
 
-      const operationName = this.operationName || '';
+      const operationName =
+        this.operationName || o.requestContext.operationName || '';
+      const documentAST = this.documentAST || o.requestContext.document;
+
       let signature;
-      if (this.documentAST) {
+      if (documentAST) {
         const calculateSignature =
           this.options.calculateSignature || defaultEngineReportingSignature;
-        signature = calculateSignature(this.documentAST, operationName);
+        signature = calculateSignature(documentAST, operationName);
       } else if (this.queryString) {
         // We didn't get an AST, possibly because of a parse failure. Let's just
         // use the full query string.
